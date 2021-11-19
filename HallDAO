@@ -1,0 +1,66 @@
+package com.spring;
+
+
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+
+
+import javax.sql.DataSource;
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Repository;
+@Repository("hallDAO")
+public class HallDAO {
+
+
+DataSource dataSource;
+JdbcTemplate jdbcTemplate;
+
+public DataSource getDataSource() {
+return dataSource;
+}
+@Autowired
+public void setDataSource(DataSource dataSource) {
+this.jdbcTemplate=new JdbcTemplate(dataSource);
+}
+
+
+
+public ArrayList<Hall> getAllHalls(){
+String sql="select * from hall";
+return (ArrayList<Hall>) jdbcTemplate.query(sql,new HallMapper());
+
+}
+
+public void delete(String name) {
+String sql="delete from hall where hallName=?";
+jdbcTemplate.update(sql,new Object[] {name});
+return;
+
+}
+
+
+
+public static final class HallMapper implements RowMapper<Hall>{
+
+
+
+@Override
+public Hall mapRow(ResultSet resultSet, Integer rowNumber) throws SQLException {
+return new Hall(resultset.getInt("id"),resultSet.getString("hallName"),resultSet.getString("hallOwnerName"),resultSet.getString("ownerMobile"),resultSet.getString("ownerEmailId"),resultSet.getInt("hallFare"));
+
+
+
+}
+
+
+
+}
+}
