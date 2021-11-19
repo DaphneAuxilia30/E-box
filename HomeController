@@ -1,0 +1,64 @@
+package com.spring;
+
+
+
+import java.util.Map;
+
+
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.AbstractController;
+
+
+
+@Controller
+public class HomeController{
+HallDAO hallDAO;
+
+public HallDAO getEventDAO() {
+return hallDAO;
+}
+@Autowired
+public void setEventDAO(HallDAO hallDAO) {
+this.hallDAO = hallDAO;
+}
+
+
+
+@RequestMapping("/")
+public ModelAndView Home() {
+ModelAndView model= new ModelAndView("Home");
+model.addObject("tableDetails",hallDAO.getAllHalls());
+return model;
+
+}
+
+
+
+@RequestMapping("/deleteHall")
+public ModelAndView delete(){
+ModelAndView model= new ModelAndView("Delete");
+model.addObject("tableDetails",hallDAO.getAllHalls());
+return model;
+
+}
+
+
+
+@RequestMapping(value="/deleteHallProcess", method=RequestMethod.POST)
+public ModelAndView deleteHallProcess(@RequestParam("name") String name){
+hallDAO.delete(name);
+return Home();
+
+}
+}
